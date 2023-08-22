@@ -4,6 +4,7 @@
  */
 package com.tecnoservices.inventory.services;
 
+import com.tecnoservices.inventory.model.Category;
 import com.tecnoservices.inventory.response.CategoryResponseRest;
 import org.springframework.http.ResponseEntity;
 
@@ -16,6 +17,8 @@ public interface ICategoryServices {
     public ResponseEntity<CategoryResponseRest> search();
     
     public ResponseEntity<CategoryResponseRest> searchById(Long id);
+     
+   public ResponseEntity<CategoryResponseRest> save(Category category);
     
     
 }
