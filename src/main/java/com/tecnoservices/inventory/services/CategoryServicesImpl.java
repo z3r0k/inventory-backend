@@ -114,5 +114,47 @@ public class CategoryServicesImpl implements  ICategoryServices {
         return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK);
         
     }
+
+    @Override
+    @Transactional
+    public ResponseEntity<CategoryResponseRest> update(Category category, Long id) {
+        
+        CategoryResponseRest response = new  CategoryResponseRest();
+      List<Category> list = new ArrayList<>();
+        try {
+            Optional<Category> categorySearch = categoryDao.findById(id);
+            
+            if (categorySearch.isPresent()) {
+                // se procederá a actualizar el registro 
+                categorySearch.get().setName(category.getName());
+                categorySearch.get().setDescription(category.getDescription());
+                
+                Category categoryToUpdate = categoryDao.save(categorySearch.get());
+                
+                if (categoryToUpdate != null) {
+                list.add(categoryToUpdate);
+                response.getCategoryResponse().setCategory(list);
+                response.setMetadata("Respuesta Correcta", "200", "Categoria actualizada"); 
+                } else{
+                    response.setMetadata("Failed To Save", "400", "Categoria no actualizada");
+                    return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.BAD_REQUEST);
+                }
+                
+            } else {
+               response.setMetadata("Not Found", "404", "Categoria no encontrada");
+               return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.NOT_FOUND);
+            }
+         
+        } catch (Exception e) {
+            
+            
+         response.setMetadata("Respuesta Error", "500", "Error al actualizar la categoria");
+         e.getStackTrace();
+           return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+          
+        }
+        return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK);
+       
+    }
             
 }
